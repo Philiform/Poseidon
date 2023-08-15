@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Login</title>
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row mt-5 mb-4">
+			<div class="col-12 text-center">
+			<h3>Access Denied Exception</h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12 mb-3 text-center">
+				You are not authorized for the requested data.
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12 text-center">
+				<form action="/logout" method="get">
+					<input type="submit" class="px-3" value="Submit"/>
+				</form>
+			</div>
+		</div>
+</body>
+
+</html>
