@@ -1,27 +1,102 @@
-# spring-boot
-## Technical:
+# Poseidon Capital Solutions
 
-1. Spring Boot 3.1.0
-2. Java 17
-3. Thymeleaf
-4. Bootstrap v.4.3.1
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 
+Il s'agit d'une **application Web de TEST** développée en Java avec Spring Boot 3.
 
-## Setup with Intellij IDE
-1. Create project from Initializr: File > New > project > Spring Initializr
-2. Add lib repository into pom.xml
-3. Add folders
-    - Source root: src/main/java
-    - View: src/main/resources
-    - Static: src/main/resource/static
-4. Create database with name "demo" as configuration in application.properties
-5. Run sql script to create table doc/data.sql
+Cette application permet de gérer les utilisateurs de l'application et d'alimenter le système avec des entités de base qui serviront à générer des transactions financières.
 
-## Implement a Feature
-1. Create mapping domain class and place in package com.nnk.springboot.domain
-2. Create repository class and place in package com.nnk.springboot.repositories
-3. Create controller class and place in package com.nnk.springboot.controllers
+## Pour commencer
 
-## Security
-1. Create user service to load user from  database and place in package com.nnk.springboot.services
-2. Add configuration class and place in package com.nnk.springboot.config
+Faire un fork du projet ou le cloner.
+
+### Pré-requis
+
+* Java				: jdk 17.0.7
+* Spring Boot		: 3.1.0
+* Maven				: 3.8.7
+* Thymeleaf-extras-springsecurity6
+* MySQL				: 8
+* Liste totale		: voir le fichier "pom.xml"
+
+### Lancer les tests unitaires
+
+_Executez la commande_  ``mvn clean test``
+
+### Créer un fichier JAR
+
+_Executez la commande_  ``mvn clean package``
+
+## Démarrer l'application
+
+Copier le dossier "config" et le fichier "Poseidon-0.0.1-SNAPSHOT.jar" dans le même dossier.
+
+_Executez la commande_  ``java -jar Poseidon-0.0.1-SNAPSHOT.jar``
+
+## Tester l'application
+
+### Créer une base de données MySQL 8:
+* [Base de données SQL](./doc/data.sql)
+
+### Dans un navigateur internet:
+* Entrer l'adresse: ``http://localhost:8080/home``
+
+### Login:
+* s'identifier:
+	* entrer le nom d'utilisateur et le mot de passe (8 caractères, au moins: 1 majuscule, 1 minuscule, 1 chiffre et 1 symbole) + cliquer sur le bouton "Login"
+* exemple:
+	* entrer dans la zone de texte Username: ``user``
+	* entrer dans la zone de texte Password: ``123456aA!``
+
+### User Management:
+* gestion des utilisateurs réservé à un utilisateur avec le rôle "ADMIN"
+* exemple:
+	* entrer dans la zone de texte Username: ``admin``
+	* entrer dans la zone de texte Password: ``123456aA!``
+
+### Menu accessible uniquement pour "User Management"
+
+* **Menu User List:**
+	* opérations CRUD
+
+### Menus accessibles après "Login" ou "User Management"
+
+* **Menu Bid List:**
+	* opérations CRUD
+
+* **Menu Curve Points:**
+	* opérations CRUD
+
+* **Menu Ratings:**
+	* opérations CRUD
+
+* **Menu Trade:**
+	* opérations CRUD
+
+* **Menu Rule:**
+	* opérations CRUD
+
+* **Bouton Logout:**
+	* sortir de l'application
+
+### Information:
+* Après 1 minute sans action de l'utilisateur, il devra s'authentifier à nouveau
+* Pour modifier ce paramètre mettez en commentaire la ligne "server.servlet.session.timeout=60s" dans le fichier "application.properties"
+
+## Développée avec
+
+* eclipse 4.28.00
+
+## Versions
+
+Dernière version: SNAPSHOT: 0.0.1
+
+## Auteur
+
+* **Philippe PERNET**  _alias_  [@Philiform](https://github.com/Philiform)
+
+## License
+
+Ce projet n'est pas sous licence

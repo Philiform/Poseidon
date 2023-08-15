@@ -1,99 +1,125 @@
+START TRANSACTION;
 
-CREATE TABLE BidList (
-  BidListId tinyint(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS bid (
+  bid_list_id INTEGER NOT NULL AUTO_INCREMENT,
   account VARCHAR(30) NOT NULL,
-  type VARCHAR(30) NOT NULL,
-  bidQuantity DOUBLE,
-  askQuantity DOUBLE,
+  `type` VARCHAR(30) NOT NULL,
+  bid_quantity DOUBLE NOT NULL,
+  ask_quantity DOUBLE,
   bid DOUBLE ,
   ask DOUBLE,
   benchmark VARCHAR(125),
-  bidListDate TIMESTAMP,
+  bid_list_date TIMESTAMP,
   commentary VARCHAR(125),
   security VARCHAR(125),
   status VARCHAR(10),
   trader VARCHAR(125),
   book VARCHAR(125),
-  creationName VARCHAR(125),
-  creationDate TIMESTAMP ,
-  revisionName VARCHAR(125),
-  revisionDate TIMESTAMP ,
-  dealName VARCHAR(125),
-  dealType VARCHAR(125),
-  sourceListId VARCHAR(125),
+  creation_name VARCHAR(125),
+  creation_date TIMESTAMP ,
+  revision_name VARCHAR(125),
+  revision_date TIMESTAMP ,
+  deal_name VARCHAR(125),
+  deal_type VARCHAR(125),
+  source_list_id VARCHAR(125),
   side VARCHAR(125),
 
-  PRIMARY KEY (BidListId)
-)
+  PRIMARY KEY (id)
+);
 
-CREATE TABLE Trade (
-  TradeId tinyint(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS curve_point (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  curve_id INTEGER NOT NULL,
+  as_of_date TIMESTAMP,
+  term DOUBLE NOT NULL,
+  `value` DOUBLE NOT NULL,
+  creation_date TIMESTAMP,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS rating (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  moodys_rating VARCHAR(125) NOT NULL,
+  sand_p_rating VARCHAR(125) NOT NULL,
+  fitch_rating VARCHAR(125) NOT NULL,
+  order INTEGER NOT NULL,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS rule (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(125) NOT NULL,
+  description VARCHAR(125) NOT NULL,
+  json VARCHAR(125) NOT NULL,
+  template VARCHAR(512) NOT NULL,
+  `sql_str` VARCHAR(125) NOT NULL,
+  `sql_part` VARCHAR(125) NOT NULL,
+
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS trade (
+  id INTEGER NOT NULL AUTO_INCREMENT,
   account VARCHAR(30) NOT NULL,
-  type VARCHAR(30) NOT NULL,
-  buyQuantity DOUBLE,
-  sellQuantity DOUBLE,
-  buyPrice DOUBLE ,
-  sellPrice DOUBLE,
-  tradeDate TIMESTAMP,
+  `type` VARCHAR(30) NOT NULL,
+  buy_quantity DOUBLE NOT NULL,
+  sell_quantity DOUBLE,
+  buy_price DOUBLE ,
+  sell_price DOUBLE,
+  trade_date TIMESTAMP,
   security VARCHAR(125),
   status VARCHAR(10),
   trader VARCHAR(125),
   benchmark VARCHAR(125),
   book VARCHAR(125),
-  creationName VARCHAR(125),
-  creationDate TIMESTAMP ,
-  revisionName VARCHAR(125),
-  revisionDate TIMESTAMP ,
-  dealName VARCHAR(125),
-  dealType VARCHAR(125),
-  sourceListId VARCHAR(125),
+  creation_name VARCHAR(125),
+  creation_date TIMESTAMP ,
+  revision_name VARCHAR(125),
+  revision_date TIMESTAMP ,
+  deal_name VARCHAR(125),
+  deal_type VARCHAR(125),
+  source_list_id VARCHAR(125),
   side VARCHAR(125),
 
-  PRIMARY KEY (TradeId)
-)
+  PRIMARY KEY (id)
+);
 
-CREATE TABLE CurvePoint (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
-  CurveId tinyint,
-  asOfDate TIMESTAMP,
-  term DOUBLE ,
-  value DOUBLE ,
-  creationDate TIMESTAMP ,
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  username VARCHAR(125) NOT NULL,
+  password VARCHAR(125) NOT NULL,
+  fullname VARCHAR(125) NOT NULL,
+  role VARCHAR(125) NOT NULL,
 
-  PRIMARY KEY (Id)
-)
+  PRIMARY KEY (id)
+);
 
-CREATE TABLE Rating (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
-  moodysRating VARCHAR(125),
-  sandPRating VARCHAR(125),
-  fitchRating VARCHAR(125),
-  orderNumber tinyint,
+ALTER TABLE users ADD CONSTRAINT username UNIQUE (username);
 
-  PRIMARY KEY (Id)
-)
+insert into bid_list(id, account, type, bid_quantity) values
+(1, 'Account Name 1', 'Account Type 1', 10),
+(2, 'Account Name 2', 'Account Type 2', 20);
 
-CREATE TABLE RuleName (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
-  name VARCHAR(125),
-  description VARCHAR(125),
-  json VARCHAR(125),
-  template VARCHAR(512),
-  sqlStr VARCHAR(125),
-  sqlPart VARCHAR(125),
+insert into trade(id, account, type, buy_quantity) values
+(1, 'Account Name 1', 'Account Type 1', 10),
+(2, 'Account Name 2', 'Account Type 2', 20);
 
-  PRIMARY KEY (Id)
-)
+insert into curve_point(id, curve_id, term, value) values
+(1, 11, 31, 10),
+(2, 22, 32, 20);
 
-CREATE TABLE Users (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
-  username VARCHAR(125),
-  password VARCHAR(125),
-  fullname VARCHAR(125),
-  role VARCHAR(125),
+insert into rating(id, moodys_rating, sand_p_rating, fitch_rating, order_number) values
+(1, 'Moodys Rating 1', 'Sand P Rating 1', 'Fitch Rating 1', 10),
+(2, 'Moodys Rating 2', 'Sand P Rating 2', 'Fitch Rating 2', 20);
 
-  PRIMARY KEY (Id)
-)
+insert into rule_name(id, name, description, json, template, sql_str, sql_part) values
+(1, 'Name 1', 'description 1', 'Json 1', 'Template 1', 'Sql Str 1', 'Sql Part 1'),
+(2, 'Name 2', 'description 2', 'Json 2', 'Template 2', 'Sql Str 2', 'Sql Part 2');
 
-insert into Users(fullname, username, password, role) values("Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN")
-insert into Users(fullname, username, password, role) values("User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER")
+insert into users(id, fullname, username, password, role) values
+(1, 'Administrator', 'admin', '$2a$10$TO.V.deBj.MJqREwpJp.GO3RY6XVkPJdaPO5bXFiFcF5Z/pbFZL0C', 'ADMIN'),
+(2, 'User', 'user', '$2a$10$YW6j2AEFb0M0ZpjVyXYnL.ovwXJue0/jqXRJkoqUcAufHjC4ccDf.', 'USER');
+
+COMMIT;

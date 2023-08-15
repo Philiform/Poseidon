@@ -21,50 +21,62 @@ import lombok.NoArgsConstructor;
 @Data
 
 /**
- * Instantiates a new rating.
+ * Instantiates a new rule.
  */
 @NoArgsConstructor
 
 /**
- * Instantiates a new rating.
+ * Instantiates a new rule.
  *
  * @param id the id
- * @param moodysRating the moodys rating
- * @param sandPRating the sand P rating
- * @param fitchRating the fitch rating
- * @param orderNumber the order number
+ * @param name the name
+ * @param description the description
+ * @param json the json
+ * @param template the template
+ * @param sqlStr the sql str
+ * @param sqlPart the sql part
  */
 @AllArgsConstructor
 @Entity
-@Table(name = "rating")
-public class Rating {
+@Table(name = "rule")
+public class Rule {
 
 	/** The id. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	/** The moodys rating. */
-	@Column(name = "moodys_rating")
+	/** The name. */
 	@NotBlank
 	@Size(max = 125)
-	private String moodysRating;
+	private String name;
 
-	/** The sand P rating. */
-	@Column(name = "sand_p_rating")
+	/** The description. */
 	@NotBlank
 	@Size(max = 125)
-	private String sandPRating;
+	private String description;
 
-	/** The fitch rating. */
-	@Column(name = "fitch_rating")
+	/** The json. */
 	@NotBlank
 	@Size(max = 125)
-	private String fitchRating;
+	private String json;
 
-	/** The order number. */
-	@Column(name = "order_number", nullable = true)
-	private int orderNumber;
+	/** The template. */
+	@NotBlank
+	@Size(max = 512)
+	private String template;
+
+	/** The sql str. */
+	@Column(name = "sql_str")
+	@NotBlank
+	@Size(max = 125)
+	private String sqlStr;
+
+	/** The sql part. */
+	@Column(name = "sql_part")
+	@NotBlank
+	@Size(max = 125)
+	private String sqlPart;
 
 	/**
 	 * To string.
@@ -75,10 +87,12 @@ public class Rating {
 	public String toString() {
 		return "[ " +
 			"id = " + id + ", " +
-			"moodysRating = " + moodysRating + ", " +
-			"sandPRating = " + sandPRating + ", " +
-			"fitchRating = " + fitchRating + ", " +
-			"orderNumber = " + orderNumber +
+			"name = " + name + ", " +
+			"description = " + description + ", " +
+			"json = " + json + ", " +
+			"template = " + template + ", " +
+			"sqlStr = " + sqlStr + ", " +
+			"sqlPart = " + sqlPart +
 			" ]";
 	}
 }
