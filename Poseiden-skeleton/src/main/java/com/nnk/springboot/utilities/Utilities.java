@@ -37,6 +37,17 @@ public class Utilities {
 	}
 
 	/**
+	 * Gets the user logged.
+	 *
+	 * @return the user logged
+	 */
+	public String getUserLogged() {
+		log.debug("getUserLogged");
+
+		return "user";
+	}
+
+	/**
 	 * Convert bid to dto.
 	 *
 	 * @param bid the bid

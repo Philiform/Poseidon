@@ -1,40 +1,67 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.nnk.springboot.utilities.Utilities;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
+// TODO: Auto-generated Javadoc
+/** The Constant log. */
+@Slf4j
 @Controller
-@RequestMapping("app")
 public class LoginController {
 
-    @Autowired
-    private UserRepository userRepository;
+	/** The utilities. */
+	@Autowired
+	Utilities utilities;
 
-    @GetMapping("login")
-    public ModelAndView login() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("login");
-        return mav;
-    }
+	/**
+	 * Login.
+	 *
+	 * @return HTML page
+	 */
+	@GetMapping("/login")
+	public String login() {
+		log.info("login");
 
-    @GetMapping("secure/article-details")
-    public ModelAndView getAllUserArticles() {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("users", userRepository.findAll());
-        mav.setViewName("user/list");
-        return mav;
-    }
+		return "login";
+	}
 
-    @GetMapping("error")
-    public ModelAndView error() {
-        ModelAndView mav = new ModelAndView();
-        String errorMessage= "You are not authorized for the requested data.";
-        mav.addObject("errorMsg", errorMessage);
-        mav.setViewName("403");
-        return mav;
-    }
+	/**
+	 * Logout.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return HTML page
+	 */
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response) {
+		log.info("logout");
+
+		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+			if (auth != null) {
+				log.debug("auth = " + auth.toString());
+				log.debug("name = " + auth.getName());
+
+				new SecurityContextLogoutHandler().logout(request, response, auth);
+			} else {
+				log.debug("auth IS NULL");
+			}
+		} catch (Exception e) {
+			log.error(e.toString());
+		}
+
+		return "home";
+	}
+
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.service.RatingService;
+import com.nnk.springboot.service.CurvePointService;
+import com.nnk.springboot.service.DTO.CurvePointDTO;
 import com.nnk.springboot.utilities.Utilities;
 
 import jakarta.validation.Valid;
@@ -19,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 /** The Constant log. */
 @Slf4j
 @Controller
-public class RatingController {
+public class CurvePointController {
 
 	/** The service. */
 	@Autowired
-	private RatingService service;
+	private CurvePointService service;
 
 	/** The utilities. */
 	@Autowired
@@ -35,60 +35,60 @@ public class RatingController {
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/list")
+	@GetMapping("/curvePoint/list")
 	public String home(Model model) {
 		log.info("home");
 
 		try {
 			model.addAttribute("user_logged", utilities.getUserLogged());
-			model.addAttribute("ratingList", service.getRatingList());
+			model.addAttribute("curvePointDTOList", service.getCurvePointDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "rating/list";
+		return "curvePoint/list";
 	}
 
 	/**
-	 * Adds the rating form.
+	 * Adds the curve point form.
 	 *
-	 * @param rating the rating
+	 * @param curvePointDTO the curve point DTO
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/add")
-	public String addRatingForm(Rating rating) {
-		log.info("addRatingForm");
+	@GetMapping("/curvePoint/add")
+	public String addCurvePointForm(CurvePointDTO curvePointDTO) {
+		log.info("addCurvePointForm");
 
-		return "rating/add";
+		return "curvePoint/add";
 	}
 
 	/**
 	 * Validate.
 	 *
-	 * @param rating the rating
+	 * @param curvePointDTO the curve point DTO
 	 * @param result the result
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@PostMapping("/rating/validate")
-	public String validate(@Valid Rating rating, BindingResult result, Model model) {
+	@PostMapping("/curvePoint/validate")
+	public String validate(@Valid CurvePointDTO curvePointDTO, BindingResult result, Model model) {
 		log.info("validate");
-
-		log.debug("rating = " + rating.toString());
+		log.debug("curvePointDTO = " + curvePointDTO.toString());
 
 		try {
 			if (!result.hasErrors()) {
-				if (!service.saveRating(rating).isEmpty()) {
-					model.addAttribute("ratingList", service.getRatingList());
 
-					return "redirect:/rating/list";
+				if (!service.saveCurvePointDTO(curvePointDTO).isEmpty()) {
+					model.addAttribute("curvePointDTOList", service.getCurvePointDTOList());
 				}
+
+				return "redirect:/curvePoint/list";
 			}
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "rating/add";
+		return "curvePoint/add";
 	}
 
 	/**
@@ -98,69 +98,69 @@ public class RatingController {
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/update/{id}")
+	@GetMapping("/curvePoint/update/{id}")
 	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 		log.info("showUpdateForm");
 
 		try {
-			model.addAttribute("rating", service.getRatingForUpdate(id));
+			model.addAttribute("curvePointDTO", service.getCurvePointDTOForUpdate(id));
 
-			return "rating/update";
+			return "curvePoint/update";
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/curvePoint/list";
 	}
 
 	/**
-	 * Update rating.
+	 * Update curve point.
 	 *
 	 * @param id the id
-	 * @param rating the rating
+	 * @param curvePointDTO the curve point DTO
 	 * @param result the result
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@PostMapping("/rating/update/{id}")
-	public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating, BindingResult result,
-			Model model) {
-		log.info("updateRating");
+	@PostMapping("/curvePoint/update/{id}")
+	public String updateCurvePoint(@PathVariable("id") Integer id, @Valid CurvePointDTO curvePointDTO,
+			BindingResult result, Model model) {
+		log.info("updateCurvePoint");
 		log.debug("id = " + id);
-		log.debug("rating = " + rating.toString());
+		log.debug("curvePointDTO = " + curvePointDTO.toString());
 
 		try {
 			if (result.hasErrors()) {
-				return "rating/update";
+				return "curvePoint/update";
 			}
-			service.updateRating(id, rating);
-			model.addAttribute("ratingList", service.getRatingList());
+			service.updateCurvePointDTO(id, curvePointDTO);
+			model.addAttribute("curvePointDTOList", service.getCurvePointDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/curvePoint/list";
 	}
 
 	/**
-	 * Delete rating.
+	 * Delete curve point.
 	 *
 	 * @param id the id
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/delete/{id}")
-	public String deleteRating(@PathVariable("id") Integer id, Model model) {
-		log.info("deleteRating");
+	@GetMapping("/curvePoint/delete/{id}")
+	public String deleteCurvePoint(@PathVariable("id") Integer id, Model model) {
+		log.info("deleteCurvePoint");
 		log.debug("id = " + id);
 
 		try {
-			service.deleteRating(id);
-			model.addAttribute("ratingList", service.getRatingList());
+			service.deleteCurvePoint(id);
+			model.addAttribute("curvePointDTOList", service.getCurvePointDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/curvePoint/list";
 	}
 }

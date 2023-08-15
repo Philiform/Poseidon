@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.service.RatingService;
+import com.nnk.springboot.service.BidService;
+import com.nnk.springboot.service.DTO.BidDTO;
 import com.nnk.springboot.utilities.Utilities;
 
 import jakarta.validation.Valid;
@@ -19,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 /** The Constant log. */
 @Slf4j
 @Controller
-public class RatingController {
+public class BidController {
 
 	/** The service. */
 	@Autowired
-	private RatingService service;
+	private BidService service;
 
 	/** The utilities. */
 	@Autowired
@@ -35,60 +35,62 @@ public class RatingController {
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/list")
+	@GetMapping("/bid/list")
 	public String home(Model model) {
 		log.info("home");
 
 		try {
 			model.addAttribute("user_logged", utilities.getUserLogged());
-			model.addAttribute("ratingList", service.getRatingList());
+			model.addAttribute("bidDTOList", service.getBidDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "rating/list";
+		return "bid/list";
 	}
 
 	/**
-	 * Adds the rating form.
+	 * Adds the bid form.
 	 *
-	 * @param rating the rating
+	 * @param bidDTO the bid DTO
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/add")
-	public String addRatingForm(Rating rating) {
-		log.info("addRatingForm");
+	@GetMapping("/bid/add")
+	public String addBidForm(BidDTO bidDTO) {
+		log.info("addBidForm");
 
-		return "rating/add";
+		return "bid/add";
 	}
 
 	/**
 	 * Validate.
 	 *
-	 * @param rating the rating
+	 * @param bidDTO the bid DTO
 	 * @param result the result
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@PostMapping("/rating/validate")
-	public String validate(@Valid Rating rating, BindingResult result, Model model) {
+	@PostMapping("/bid/validate")
+	public String validate(@Valid BidDTO bidDTO, BindingResult result, Model model) {
 		log.info("validate");
-
-		log.debug("rating = " + rating.toString());
+		log.debug("bidDTO = " + bidDTO.toString());
 
 		try {
 			if (!result.hasErrors()) {
-				if (!service.saveRating(rating).isEmpty()) {
-					model.addAttribute("ratingList", service.getRatingList());
 
-					return "redirect:/rating/list";
+				if(!service.saveBidDTO(bidDTO).isEmpty()) {
+					model.addAttribute("bidDTOList", service.getBidDTOList());
+
+					return "redirect:/bid/list";
 				}
+
+				return "redirect:/bid/list";
 			}
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "rating/add";
+		return "bid/add";
 	}
 
 	/**
@@ -98,69 +100,68 @@ public class RatingController {
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/update/{id}")
+	@GetMapping("/bid/update/{id}")
 	public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
 		log.info("showUpdateForm");
 
 		try {
-			model.addAttribute("rating", service.getRatingForUpdate(id));
+			model.addAttribute("bidDTO", service.getBidDTOForUpdate(id));
 
-			return "rating/update";
+			return "bid/update";
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/bid/list";
 	}
 
 	/**
-	 * Update rating.
+	 * Update bid.
 	 *
 	 * @param id the id
-	 * @param rating the rating
+	 * @param bidDTO the bid DTO
 	 * @param result the result
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@PostMapping("/rating/update/{id}")
-	public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating, BindingResult result,
-			Model model) {
-		log.info("updateRating");
+	@PostMapping("/bid/update/{id}")
+	public String updateBid(@PathVariable("id") Integer id, @Valid BidDTO bidDTO, BindingResult result, Model model) {
+		log.info("updateBid");
 		log.debug("id = " + id);
-		log.debug("rating = " + rating.toString());
+		log.debug("bidDTO = " + bidDTO.toString());
 
 		try {
 			if (result.hasErrors()) {
-				return "rating/update";
+				return "bid/update";
 			}
-			service.updateRating(id, rating);
-			model.addAttribute("ratingList", service.getRatingList());
+			service.updateBidDTO(id, bidDTO);
+			model.addAttribute("bidDTOList", service.getBidDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/bid/list";
 	}
 
 	/**
-	 * Delete rating.
+	 * Delete bid.
 	 *
 	 * @param id the id
 	 * @param model the model
 	 * @return HTML page
 	 */
-	@GetMapping("/rating/delete/{id}")
-	public String deleteRating(@PathVariable("id") Integer id, Model model) {
-		log.info("deleteRating");
+	@GetMapping("/bid/delete/{id}")
+	public String deleteBid(@PathVariable("id") Integer id, Model model) {
+		log.info("deleteBid");
 		log.debug("id = " + id);
 
 		try {
-			service.deleteRating(id);
-			model.addAttribute("ratingList", service.getRatingList());
+			service.deleteBid(id);
+			model.addAttribute("bidDTOList", service.getBidDTOList());
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
 
-		return "redirect:/rating/list";
+		return "redirect:/bid/list";
 	}
 }
