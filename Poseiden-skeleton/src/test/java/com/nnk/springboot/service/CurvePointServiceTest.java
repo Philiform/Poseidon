@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.repositories.CurvePointRepository;
+import com.nnk.springboot.proxies.CurvePointProxy;
 import com.nnk.springboot.service.DTO.CurvePointDTO;
 
 // TODO: Auto-generated Javadoc
@@ -34,9 +34,9 @@ public class CurvePointServiceTest {
 	@InjectMocks
 	private CurvePointService service;
 
-	/** The curve point connection repository. */
+	/** The curve point connection proxy. */
 	@Mock
-	private CurvePointRepository repository;
+	private CurvePointProxy proxy;
 
 	/** The model mapper. */
 	@Mock
@@ -95,11 +95,11 @@ public class CurvePointServiceTest {
 	 */
 	@Test
 	void test_WhenGetCurvePointDTOList_ThenReturnListCurvePointDTONotEmpty() {
-		given(repository.findAll()).willReturn(listCurvePoint);
+		given(proxy.findAll()).willReturn(listCurvePoint);
 
 		List<CurvePointDTO> response = service.getCurvePointDTOList();
 
-		verify(repository, times(1)).findAll();
+		verify(proxy, times(1)).findAll();
 		assertThat(response).isEqualTo(listCurvePointDTO);
 	}
 
@@ -109,12 +109,12 @@ public class CurvePointServiceTest {
 	@Test
 	void test_GivenGoodNewCurvePointDTO_WhenSaveCurvePointDTO_ThenReturnSavedCurvePoint() {
 		given(modelMapper.map(any(), any())).willReturn(curvePoint1);
-		given(repository.save(any())).willReturn(curvePoint1);
+		given(proxy.save(any())).willReturn(curvePoint1);
 
 		Optional<CurvePoint> response = service.saveCurvePointDTO(curvePointDTO1);
 
 		verify(modelMapper, times(1)).map(any(), any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(curvePoint1));
 	}
 
@@ -123,12 +123,12 @@ public class CurvePointServiceTest {
 	 */
 	@Test
 	void test_GivenGoodCurvePointDTOId_WhenGetCurvePointDTOForUpdate_ThenReturnCurvePointDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(curvePoint1));
+		given(proxy.findById(any(Integer.class))).willReturn(curvePoint1);
 		given(modelMapper.map(any(), any())).willReturn(curvePointDTO1);
 
 		CurvePointDTO response = service.getCurvePointDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(modelMapper, times(1)).map(any(), any());
 		assertThat(response).isEqualTo(curvePointDTO1);
 	}
@@ -139,7 +139,7 @@ public class CurvePointServiceTest {
 	@Test
 	void test_GivenBadCurvePointDTOId_WhenGetCurvePointDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getCurvePointDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(modelMapper, times(0)).map(any(), any());
 	}
 
@@ -148,12 +148,12 @@ public class CurvePointServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateCurvePointDTO_WhenGetCurvePointDTOForUpdate_ThenReturnUpdatedCurvePointDTO() {
-		given(repository.findById(any())).willReturn(Optional.of(curvePoint1));
+		given(proxy.findById(any())).willReturn(curvePoint1);
 		given(modelMapper.map(any(), any())).willReturn(curvePointDTO1);
 
 		CurvePointDTO response = service.getCurvePointDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any());
+		verify(proxy, times(1)).findById(any());
 		verify(modelMapper, times(1)).map(any(), any());
 		assertThat(response).isEqualTo(curvePointDTO1);
 	}
@@ -164,7 +164,7 @@ public class CurvePointServiceTest {
 	@Test
 	void test_GivenBadUpdateCurvePointDTO_WhenGetCurvePointDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getCurvePointDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -173,12 +173,12 @@ public class CurvePointServiceTest {
 	@Test
 	void test_GivenGoodUpdateCurvePointDTO_WhenUpdateCurvePointDTO_ThenReturnUpdatedCurvePointDTO() {
 		given(modelMapper.map(any(), any())).willReturn(curvePoint1);
-		given(repository.save(any())).willReturn(curvePoint1);
+		given(proxy.save(any())).willReturn(curvePoint1);
 
 		Optional<CurvePoint> response = service.updateCurvePointDTO(1, curvePointDTO1);
 
 		verify(modelMapper, times(1)).map(any(), any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(curvePoint1));
 	}
 
@@ -187,22 +187,9 @@ public class CurvePointServiceTest {
 	 */
 	@Test
 	void test_GivenGoodCurvePointDTOId_WhenDelereCurvePointDTO_ThenDeleteCurvePointDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(curvePoint1));
-
 		service.deleteCurvePoint(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(1)).delete(any(CurvePoint.class));
-	}
-
-	/**
-	 * Test given bad curve point DTO id when delere curve point DTO then throw illegal argument exception.
-	 */
-	@Test
-	void test_GivenBadCurvePointDTOId_WhenDelereCurvePointDTO_ThenThrowIllegalArgumentException() {
-		assertThrows(IllegalArgumentException.class, () -> service.deleteCurvePoint(10));
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(0)).delete(any(CurvePoint.class));
+		verify(proxy, times(1)).deleteById(any(Integer.class));
 	}
 
 }

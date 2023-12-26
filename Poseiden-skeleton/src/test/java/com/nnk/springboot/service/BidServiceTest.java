@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nnk.springboot.domain.Bid;
-import com.nnk.springboot.repositories.BidRepository;
+import com.nnk.springboot.proxies.BidProxy;
 import com.nnk.springboot.service.DTO.BidDTO;
 import com.nnk.springboot.utilities.Utilities;
 
@@ -34,9 +34,9 @@ public class BidServiceTest {
 	@InjectMocks
 	private BidService service;
 
-	/** The bid connection repository. */
+	/** The bid connection proxy. */
 	@Mock
-	private BidRepository repository;
+	private BidProxy proxy;
 
 	/** The utilities. */
 	@Mock
@@ -95,14 +95,14 @@ public class BidServiceTest {
 	 */
 	@Test
 	void test_WhenGetBidDTOList_ThenReturnListBidDTONotEmpty() {
-		given(repository.findAll()).willReturn(listBid);
+		given(proxy.findAll()).willReturn(listBid);
 		given(utilities.convertBidToDto(any()))
 			.willReturn(bidDTO1)
 			.willReturn(bidDTO2);
 
 		List<BidDTO> response = service.getBidDTOList();
 
-		verify(repository, times(1)).findAll();
+		verify(proxy, times(1)).findAll();
 		verify(utilities, times(2)).convertBidToDto(any());
 		assertThat(response).isEqualTo(listBidDTO);
 	}
@@ -112,12 +112,12 @@ public class BidServiceTest {
 	 */
 	void test_GivenGoodNewBidDTO_WhenSaveBidDTO_ThenReturnSavedBid() {
 		given(utilities.convertDtoToBid(any())).willReturn(bid1);
-		given(repository.save(any())).willReturn(bid1);
+		given(proxy.save(any())).willReturn(bid1);
 
 		Optional<Bid> response = service.saveBidDTO(bidDTO1);
 
 		verify(utilities, times(1)).convertDtoToBid(any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(bid1));
 	}
 
@@ -126,12 +126,12 @@ public class BidServiceTest {
 	 */
 	@Test
 	void test_GivenGoodBidDTOId_WhenGetBidDTOForUpdate_ThenReturnBidDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(bid1));
+		given(proxy.findById(any(Integer.class))).willReturn(bid1);
 		given(utilities.convertBidToDto(any())).willReturn(bidDTO1);
 
 		BidDTO response = service.getBidDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(utilities, times(1)).convertBidToDto(any());
 		assertThat(response).isEqualTo(bidDTO1);
 	}
@@ -142,7 +142,7 @@ public class BidServiceTest {
 	@Test
 	void test_GivenBadBidDTOId_WhenGetBidDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getBidDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(utilities, times(0)).convertBidToDto(any());
 	}
 
@@ -151,12 +151,12 @@ public class BidServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateBidDTO_WhenGetBidDTOForUpdate_ThenReturnUpdatedBidDTO() {
-		given(repository.findById(any())).willReturn(Optional.of(bid1));
+		given(proxy.findById(any())).willReturn(bid1);
 		given(utilities.convertBidToDto(any())).willReturn(bidDTO1);
 
 		BidDTO response = service.getBidDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any());
+		verify(proxy, times(1)).findById(any());
 		verify(utilities, times(1)).convertBidToDto(any());
 		assertThat(response).isEqualTo(bidDTO1);
 	}
@@ -167,7 +167,7 @@ public class BidServiceTest {
 	@Test
 	void test_GivenBadUpdateBidDTO_WhenGetBidDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getBidDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -176,12 +176,12 @@ public class BidServiceTest {
 	@Test
 	void test_GivenGoodUpdateBidDTO_WhenUpdateBidDTO_ThenReturnUpdatedBidDTO() {
 		given(utilities.convertDtoToBid(any())).willReturn(bid1);
-		given(repository.save(any())).willReturn(bid1);
+		given(proxy.save(any())).willReturn(bid1);
 
 		Optional<Bid> response = service.updateBidDTO(1, bidDTO1);
 
 		verify(utilities, times(1)).convertDtoToBid(any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(bid1));
 	}
 
@@ -190,22 +190,9 @@ public class BidServiceTest {
 	 */
 	@Test
 	void test_GivenGoodBidDTOId_WhenDelereBidDTO_ThenDeleteBidDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(bid1));
-
 		service.deleteBid(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(1)).delete(any(Bid.class));
-	}
-
-	/**
-	 * Test given bad bid DTO id when delere bid DTO then throw illegal argument exception.
-	 */
-	@Test
-	void test_GivenBadBidDTOId_WhenDelereBidDTO_ThenThrowIllegalArgumentException() {
-		assertThrows(IllegalArgumentException.class, () -> service.deleteBid(10));
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(0)).delete(any(Bid.class));
+		verify(proxy, times(1)).deleteById(any(Integer.class));
 	}
 
 }

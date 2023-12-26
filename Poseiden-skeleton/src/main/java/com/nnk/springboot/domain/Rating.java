@@ -1,11 +1,5 @@
 package com.nnk.springboot.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,35 +29,27 @@ import lombok.NoArgsConstructor;
  * @param orderNumber the order number
  */
 @AllArgsConstructor
-@Entity
-@Table(name = "rating")
 public class Rating {
 
 	/** The id. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	/** The moodys rating. */
-	@Column(name = "moodys_rating")
 	@NotBlank
 	@Size(max = 125)
 	private String moodysRating;
 
 	/** The sand P rating. */
-	@Column(name = "sand_p_rating")
 	@NotBlank
 	@Size(max = 125)
 	private String sandPRating;
 
 	/** The fitch rating. */
-	@Column(name = "fitch_rating")
 	@NotBlank
 	@Size(max = 125)
 	private String fitchRating;
 
 	/** The order number. */
-	@Column(name = "order_number", nullable = true)
 	private int orderNumber;
 
 	/**

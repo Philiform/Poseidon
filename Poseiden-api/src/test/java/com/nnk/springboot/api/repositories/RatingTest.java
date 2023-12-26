@@ -1,4 +1,4 @@
-package com.nnk.springboot.repositories;
+package com.nnk.springboot.api.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +13,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 //import org.springframework.boot.test.context.SpringBootTest;
 
-import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.api.domain.Rating;
 
 // TODO: Auto-generated Javadoc
 /**

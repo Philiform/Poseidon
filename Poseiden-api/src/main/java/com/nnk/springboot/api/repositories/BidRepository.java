@@ -1,8 +1,8 @@
-package com.nnk.springboot.repositories;
+package com.nnk.springboot.api.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.nnk.springboot.domain.Bid;
+import com.nnk.springboot.api.domain.Bid;
 
 /**
  * The Interface BidRepository.

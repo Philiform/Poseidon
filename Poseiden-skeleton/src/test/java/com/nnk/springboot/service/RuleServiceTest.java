@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nnk.springboot.domain.Rule;
-import com.nnk.springboot.repositories.RuleRepository;
+import com.nnk.springboot.proxies.RuleProxy;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -32,9 +32,9 @@ public class RuleServiceTest {
 	@InjectMocks
 	private RuleService service;
 
-	/** The rule connection repository. */
+	/** The rule connection proxy. */
 	@Mock
-	private RuleRepository repository;
+	private RuleProxy proxy;
 
 	/** The list rule. */
 	List<Rule> listRule = new ArrayList<>();
@@ -73,11 +73,11 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_WhenGetRuleList_ThenReturnListRuleNotEmpty() {
-		given(repository.findAll()).willReturn(listRule);
+		given(proxy.findAll()).willReturn(listRule);
 
 		List<Rule> response = service.getRuleList();
 
-		verify(repository, times(1)).findAll();
+		verify(proxy, times(1)).findAll();
 		assertThat(response).isEqualTo(listRule);
 	}
 
@@ -86,11 +86,11 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_GivenGoodNewRule_WhenSaveRule_ThenReturnSavedRule() {
-		given(repository.save(any())).willReturn(rule1);
+		given(proxy.save(any())).willReturn(rule1);
 
 		Optional<Rule> response = service.saveRule(rule1);
 
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(rule1));
 	}
 
@@ -99,11 +99,11 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_GivenGoodRuleId_WhenGetRuleForUpdate_ThenReturnRule() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(rule1));
+		given(proxy.findById(any(Integer.class))).willReturn(rule1);
 
 		Rule response = service.getRuleForUpdate(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		assertThat(response).isEqualTo(rule1);
 	}
 
@@ -113,7 +113,7 @@ public class RuleServiceTest {
 	@Test
 	void test_GivenBadRuleId_WhenGetRuleForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getRuleForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -121,11 +121,11 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateRule_WhenGetRuleForUpdate_ThenReturnUpdatedRule() {
-		given(repository.findById(any())).willReturn(Optional.of(rule1));
+		given(proxy.findById(any())).willReturn(rule1);
 
 		Rule response = service.getRuleForUpdate(1);
 
-		verify(repository, times(1)).findById(any());
+		verify(proxy, times(1)).findById(any());
 		assertThat(response).isEqualTo(rule1);
 	}
 
@@ -135,7 +135,7 @@ public class RuleServiceTest {
 	@Test
 	void test_GivenBadUpdateRule_WhenGetRuleForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getRuleForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -143,11 +143,11 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateRule_WhenUpdateRule_ThenReturnUpdatedRule() {
-		given(repository.save(any())).willReturn(rule1);
+		given(proxy.save(any())).willReturn(rule1);
 
 		Optional<Rule> response = service.updateRule(1, rule1);
 
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(rule1));
 	}
 
@@ -156,22 +156,9 @@ public class RuleServiceTest {
 	 */
 	@Test
 	void test_GivenGoodRuleId_WhenDelereRule_ThenDeleteRule() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(rule1));
-
 		service.deleteRule(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(1)).delete(any(Rule.class));
-	}
-
-	/**
-	 * Test given bad rule id when delere rule then throw illegal argument exception.
-	 */
-	@Test
-	void test_GivenBadRuleId_WhenDelereRule_ThenThrowIllegalArgumentException() {
-		assertThrows(IllegalArgumentException.class, () -> service.deleteRule(10));
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(0)).delete(any(Rule.class));
+		verify(proxy, times(1)).deleteById(any(Integer.class));
 	}
 
 }

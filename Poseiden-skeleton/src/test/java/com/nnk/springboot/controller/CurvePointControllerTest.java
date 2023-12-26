@@ -273,21 +273,5 @@ public class CurvePointControllerTest {
 		verify(service, times(1)).deleteCurvePoint(any(Integer.class));
 		verify(service, times(1)).getCurvePointDTOList();
 	}
-/*
-	@Test
-	public void test_GivenIllegalArgumentException_WhenGetCurvePointDTODelete_ThenRedirectToHtmlPageCurvePointDTOList() throws Exception {
-//		given(service.deleteCurvePointDTO(any(Integer.class))).willThrow(new IllegalArgumentException());
-		given(service.deleteCurvePointDTO(any(Integer.class))).willThrow(new IllegalArgumentException());
 
-		mockMvc
-			.perform(get("/curvePoint/delete/{id}", 1))
-			.andExpect(view().name("redirect:/curvePoint/list"))
-			.andExpect(status().is3xxRedirection())
-			;
-//			.andDo(print());
-
-		verify(service, times(1)).deleteCurvePointDTO(any(Integer.class));
-		verify(service, times(0)).getCurvePointDTOList();
-	}
-*/
 }

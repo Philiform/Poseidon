@@ -4,7 +4,8 @@
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
 ![Apache Maven](https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white)
 
-Il s'agit d'une **application Web de TEST** développée en Java avec Spring Boot 3.
+Il s'agit d'une **application Web de TEST utilisant une API Rest** développée en Java avec Spring Boot 3.  
+Chaque route de l'api nécessite l'utilisation d'un JWT.
 
 Cette application permet de gérer les utilisateurs de l'application et d'alimenter le système avec des entités de base qui serviront à générer des transactions financières.
 
@@ -31,6 +32,10 @@ _Executez la commande_  ``mvn clean package``
 
 ## Démarrer l'application
 
+Copier le dossier "config" et le fichier "Poseidon-api-0.0.1-SNAPSHOT.jar" dans le même dossier.
+
+_Executez la commande_  ``java -jar Poseidon-api-0.0.1-SNAPSHOT.jar``
+
 Copier le dossier "config" et le fichier "Poseidon-0.0.1-SNAPSHOT.jar" dans le même dossier.
 
 _Executez la commande_  ``java -jar Poseidon-0.0.1-SNAPSHOT.jar``
@@ -41,7 +46,7 @@ _Executez la commande_  ``java -jar Poseidon-0.0.1-SNAPSHOT.jar``
 * [Base de données SQL](./doc/data.sql)
 
 ### Dans un navigateur internet:
-* Entrer l'adresse: ``http://localhost:8080/home``
+* Entrer l'adresse: ``http://localhost:8081/home``
 
 ### Login:
 * s'identifier:

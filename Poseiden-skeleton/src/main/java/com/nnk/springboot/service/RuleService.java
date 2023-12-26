@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nnk.springboot.domain.Rule;
-import com.nnk.springboot.repositories.RuleRepository;
+import com.nnk.springboot.proxies.RuleProxy;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,9 +18,9 @@ import com.nnk.springboot.repositories.RuleRepository;
 @Service
 public class RuleService {
 
-	/** The repository. */
+	/** The proxy. */
 	@Autowired
-	private RuleRepository repository;
+	private RuleProxy proxy;
 
 	/**
 	 * Gets the rule list.
@@ -28,7 +28,7 @@ public class RuleService {
 	 * @return the rule list
 	 */
 	public List<Rule> getRuleList() {
-		return repository.findAll();
+		return proxy.findAll();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class RuleService {
 	 * @return the optional
 	 */
 	public Optional<Rule> saveRule(final Rule rule) {
-		return Optional.of(repository.save(rule));
+		return Optional.of(proxy.save(rule));
 	}
 
 	/**
@@ -48,8 +48,9 @@ public class RuleService {
 	 * @return the rule for update
 	 */
 	public Rule getRuleForUpdate(final int id) {
-		Rule rule = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid rule Id:" + id));
+		Rule rule = proxy.findById(id);
+		
+		if(rule == null)	throw(new IllegalArgumentException("Invalid rule Id:" + id));
 
 		return rule;
 	}
@@ -73,9 +74,7 @@ public class RuleService {
 	 * @param id the id
 	 */
 	public void deleteRule(final int id) {
-		Rule rule = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid rule Id:" + id));
-		repository.delete(rule);
+		proxy.deleteById(id);
 	}
 
 }
