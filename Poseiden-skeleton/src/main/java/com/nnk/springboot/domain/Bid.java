@@ -2,12 +2,6 @@ package com.nnk.springboot.domain;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -54,14 +48,9 @@ import lombok.NoArgsConstructor;
  * @param side the side
  */
 @AllArgsConstructor
-@Entity
-@Table(name = "bid")
 public class Bid {
 
 	/** The id. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "bid_list_id")
 	private int id;
 
 	/** The account. */
@@ -75,11 +64,9 @@ public class Bid {
 	private String type;
 
 	/** The bid quantity. */
-	@Column(name = "bid_quantity", nullable = true)
 	private Double bidQuantity;
 
 	/** The ask quantity. */
-	@Column(name = "ask_quantity")
 	private Double askQuantity;
 
 	/** The bid. */
@@ -92,7 +79,6 @@ public class Bid {
 	private String benchmark;
 
 	/** The bid list date. */
-	@Column(name = "bid_list_date")
 	private Timestamp bidListDate;
 
 	/** The commentary. */
@@ -111,31 +97,24 @@ public class Bid {
 	private String book;
 
 	/** The creation name. */
-	@Column(name = "creation_name")
 	private String creationName;
 
 	/** The creation date. */
-	@Column(name = "creation_date")
 	private Timestamp creationDate;
 
 	/** The revision name. */
-	@Column(name = "revision_name")
 	private String revisionName;
 
 	/** The revision date. */
-	@Column(name = "revision_date")
 	private Timestamp revisionDate;
 
 	/** The deal name. */
-	@Column(name = "deal_name")
 	private String dealName;
 
 	/** The deal type. */
-	@Column(name = "deal_type")
 	private String dealType;
 
 	/** The source list id. */
-	@Column(name = "source_list_id")
 	private String sourceListId;
 
 	/** The side. */

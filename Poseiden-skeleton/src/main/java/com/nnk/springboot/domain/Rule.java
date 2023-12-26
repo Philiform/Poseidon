@@ -1,11 +1,5 @@
 package com.nnk.springboot.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -37,13 +31,9 @@ import lombok.NoArgsConstructor;
  * @param sqlPart the sql part
  */
 @AllArgsConstructor
-@Entity
-@Table(name = "rule")
 public class Rule {
 
 	/** The id. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	/** The name. */
@@ -67,13 +57,11 @@ public class Rule {
 	private String template;
 
 	/** The sql str. */
-	@Column(name = "sql_str")
 	@NotBlank
 	@Size(max = 125)
 	private String sqlStr;
 
 	/** The sql part. */
-	@Column(name = "sql_part")
 	@NotBlank
 	@Size(max = 125)
 	private String sqlPart;

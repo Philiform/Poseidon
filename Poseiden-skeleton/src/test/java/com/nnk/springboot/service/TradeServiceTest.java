@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.proxies.TradeProxy;
 import com.nnk.springboot.service.DTO.TradeDTO;
 
 // TODO: Auto-generated Javadoc
@@ -34,9 +34,9 @@ public class TradeServiceTest {
 	@InjectMocks
 	private TradeService service;
 
-	/** The trade connection repository. */
+	/** The trade connection proxy. */
 	@Mock
-	private TradeRepository repository;
+	private TradeProxy proxy;
 
 	/** The model mapper. */
 	@Mock
@@ -95,11 +95,11 @@ public class TradeServiceTest {
 	 */
 	@Test
 	void test_WhenGetTradeDTOList_ThenReturnListTradeDTONotEmpty() {
-		given(repository.findAll()).willReturn(listTrade);
+		given(proxy.findAll()).willReturn(listTrade);
 
 		List<TradeDTO> response = service.getTradeDTOList();
 
-		verify(repository, times(1)).findAll();
+		verify(proxy, times(1)).findAll();
 		assertThat(response).isEqualTo(listTradeDTO);
 	}
 
@@ -109,12 +109,12 @@ public class TradeServiceTest {
 	@Test
 	void test_GivenGoodNewTradeDTO_WhenSaveTradeDTO_ThenReturnSavedTrade() {
 		given(modelMapper.map(any(), any())).willReturn(trade1);
-		given(repository.save(any())).willReturn(trade1);
+		given(proxy.save(any())).willReturn(trade1);
 
 		Optional<Trade> response = service.saveTradeDTO(tradeDTO1);
 
 		verify(modelMapper, times(1)).map(any(), any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(trade1));
 	}
 
@@ -123,12 +123,12 @@ public class TradeServiceTest {
 	 */
 	@Test
 	void test_GivenGoodTradeDTOId_WhenGetTradeDTOForUpdate_ThenReturnTradeDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(trade1));
+		given(proxy.findById(any(Integer.class))).willReturn(trade1);
 		given(modelMapper.map(any(), any())).willReturn(tradeDTO1);
 
 		TradeDTO response = service.getTradeDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(modelMapper, times(1)).map(any(), any());
 		assertThat(response).isEqualTo(tradeDTO1);
 	}
@@ -139,7 +139,7 @@ public class TradeServiceTest {
 	@Test
 	void test_GivenBadTradeDTOId_WhenGetTradeDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getTradeDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		verify(modelMapper, times(0)).map(any(), any());
 	}
 
@@ -148,12 +148,12 @@ public class TradeServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateTradeDTO_WhenGetTradeDTOForUpdate_ThenReturnUpdatedTradeDTO() {
-		given(repository.findById(any())).willReturn(Optional.of(trade1));
+		given(proxy.findById(any())).willReturn(trade1);
 		given(modelMapper.map(any(), any())).willReturn(tradeDTO1);
 
 		TradeDTO response = service.getTradeDTOForUpdate(1);
 
-		verify(repository, times(1)).findById(any());
+		verify(proxy, times(1)).findById(any());
 		verify(modelMapper, times(1)).map(any(), any());
 		assertThat(response).isEqualTo(tradeDTO1);
 	}
@@ -164,7 +164,7 @@ public class TradeServiceTest {
 	@Test
 	void test_GivenBadUpdateTradeDTO_WhenGetTradeDTOForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getTradeDTOForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -173,12 +173,12 @@ public class TradeServiceTest {
 	@Test
 	void test_GivenGoodUpdateTradeDTO_WhenUpdateTradeDTO_ThenReturnUpdatedTradeDTO() {
 		given(modelMapper.map(any(), any())).willReturn(trade1);
-		given(repository.save(any())).willReturn(trade1);
+		given(proxy.save(any())).willReturn(trade1);
 
 		Optional<Trade> response = service.updateTradeDTO(1, tradeDTO1);
 
 		verify(modelMapper, times(1)).map(any(), any());
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(trade1));
 	}
 
@@ -187,22 +187,9 @@ public class TradeServiceTest {
 	 */
 	@Test
 	void test_GivenGoodTradeDTOId_WhenDelereTradeDTO_ThenDeleteTradeDTO() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(trade1));
-
 		service.deleteTrade(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(1)).delete(any(Trade.class));
-	}
-
-	/**
-	 * Test given bad trade DTO id when delere trade DTO then throw illegal argument exception.
-	 */
-	@Test
-	void test_GivenBadTradeDTOId_WhenDelereTradeDTO_ThenThrowIllegalArgumentException() {
-		assertThrows(IllegalArgumentException.class, () -> service.deleteTrade(10));
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(0)).delete(any(Trade.class));
+		verify(proxy, times(1)).deleteById(any(Integer.class));
 	}
 
 }

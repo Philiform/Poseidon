@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.proxies.RatingProxy;
 import com.nnk.springboot.utilities.Utilities;
 
 // TODO: Auto-generated Javadoc
@@ -33,9 +33,9 @@ public class RatingServiceTest {
 	@InjectMocks
 	private RatingService service;
 
-	/** The rating connection repository. */
+	/** The rating connection proxy. */
 	@Mock
-	private RatingRepository repository;
+	private RatingProxy proxy;
 
 	/** The utilities. */
 	@Mock
@@ -76,11 +76,11 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_WhenGetRatingList_ThenReturnListRatingNotEmpty() {
-		given(repository.findAll()).willReturn(listRating);
+		given(proxy.findAll()).willReturn(listRating);
 
 		List<Rating> response = service.getRatingList();
 
-		verify(repository, times(1)).findAll();
+		verify(proxy, times(1)).findAll();
 		assertThat(response).isEqualTo(listRating);
 	}
 
@@ -89,11 +89,11 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_GivenGoodNewRating_WhenSaveRating_ThenReturnSavedRating() {
-		given(repository.save(any())).willReturn(rating1);
+		given(proxy.save(any())).willReturn(rating1);
 
 		Optional<Rating> response = service.saveRating(rating1);
 
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(rating1));
 	}
 
@@ -102,11 +102,11 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_GivenGoodRatingId_WhenGetRatingForUpdate_ThenReturnRating() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(rating1));
+		given(proxy.findById(any(Integer.class))).willReturn(rating1);
 
 		Rating response = service.getRatingForUpdate(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 		assertThat(response).isEqualTo(rating1);
 	}
 
@@ -116,7 +116,7 @@ public class RatingServiceTest {
 	@Test
 	void test_GivenBadRatingId_WhenGetRatingForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getRatingForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -124,11 +124,11 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateRating_WhenGetRatingForUpdate_ThenReturnUpdatedRating() {
-		given(repository.findById(any())).willReturn(Optional.of(rating1));
+		given(proxy.findById(any())).willReturn(rating1);
 
 		Rating response = service.getRatingForUpdate(1);
 
-		verify(repository, times(1)).findById(any());
+		verify(proxy, times(1)).findById(any());
 		assertThat(response).isEqualTo(rating1);
 	}
 
@@ -138,7 +138,7 @@ public class RatingServiceTest {
 	@Test
 	void test_GivenBadUpdateRating_WhenGetRatingForUpdate_ThenThrowIllegalArgumentException() {
 		assertThrows(IllegalArgumentException.class, () -> service.getRatingForUpdate(10));
-		verify(repository, times(1)).findById(any(Integer.class));
+		verify(proxy, times(1)).findById(any(Integer.class));
 	}
 
 	/**
@@ -146,11 +146,11 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_GivenGoodUpdateRating_WhenUpdateRating_ThenReturnUpdatedRating() {
-		given(repository.save(any())).willReturn(rating1);
+		given(proxy.save(any())).willReturn(rating1);
 
 		Optional<Rating> response = service.updateRating(1, rating1);
 
-		verify(repository, times(1)).save(any());
+		verify(proxy, times(1)).save(any());
 		assertThat(response).isEqualTo(Optional.of(rating1));
 	}
 
@@ -159,22 +159,9 @@ public class RatingServiceTest {
 	 */
 	@Test
 	void test_GivenGoodRatingId_WhenDelereRating_ThenDeleteRating() {
-		given(repository.findById(any(Integer.class))).willReturn(Optional.of(rating1));
-
 		service.deleteRating(1);
 
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(1)).delete(any(Rating.class));
-	}
-
-	/**
-	 * Test given bad rating id when delere rating then throw illegal argument exception.
-	 */
-	@Test
-	void test_GivenBadRatingId_WhenDelereRating_ThenThrowIllegalArgumentException() {
-		assertThrows(IllegalArgumentException.class, () -> service.deleteRating(10));
-		verify(repository, times(1)).findById(any(Integer.class));
-		verify(repository, times(0)).delete(any(Rating.class));
+		verify(proxy, times(1)).deleteById(any(Integer.class));
 	}
 
 }

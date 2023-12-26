@@ -8,14 +8,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import lombok.RequiredArgsConstructor;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SpringSecurityConfig.
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
 
+	private final LoginSuccessHandler loginSuccessHandler;
+	
 	/**
 	 * Security filter chain.
 	 *
@@ -30,9 +35,10 @@ public class SpringSecurityConfig {
 		http.formLogin((form) -> form
 				.loginPage("/login")
 				.loginProcessingUrl("/login/authentication")
+				.successHandler(loginSuccessHandler)
 				.permitAll()
 				.usernameParameter("username")
-				.defaultSuccessUrl("/bid/list")
+//				.defaultSuccessUrl("/bid/list")
 				.failureUrl("/login?error")
 				);
 

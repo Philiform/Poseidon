@@ -273,21 +273,5 @@ public class BidControllerTest {
 		verify(service, times(1)).deleteBid(any(Integer.class));
 		verify(service, times(1)).getBidDTOList();
 	}
-/*
-	@Test
-	public void test_GivenIllegalArgumentException_WhenGetBidDTODelete_ThenRedirectToHtmlPageBidDTOList() throws Exception {
-//		given(service.deleteBidDTO(any(Integer.class))).willThrow(new IllegalArgumentException());
-		given(service.deleteBidDTO(any(Integer.class))).willThrow(new IllegalArgumentException());
 
-		mockMvc
-			.perform(get("/bid/delete/{id}", 1))
-			.andExpect(view().name("redirect:/bid/list"))
-			.andExpect(status().is3xxRedirection())
-			;
-//			.andDo(print());
-
-		verify(service, times(1)).deleteBidDTO(any(Integer.class));
-		verify(service, times(0)).getBidDTOList();
-	}
-*/
 }

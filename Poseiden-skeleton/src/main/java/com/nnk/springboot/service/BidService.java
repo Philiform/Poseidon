@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nnk.springboot.domain.Bid;
-import com.nnk.springboot.repositories.BidRepository;
+import com.nnk.springboot.proxies.BidProxy;
 import com.nnk.springboot.service.DTO.BidDTO;
 import com.nnk.springboot.utilities.Utilities;
 
@@ -26,9 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class BidService {
 
-	/** The repository. */
+	/** The proxy. */
 	@Autowired
-	private BidRepository repository;
+	private BidProxy proxy;
 
 	/** The utilities. */
 	@Autowired
@@ -41,7 +41,7 @@ public class BidService {
 	 */
 	public List<BidDTO> getBidDTOList() {
 		List<BidDTO> listDto = new ArrayList<>();
-		List<Bid> list = repository.findAll();
+		List<Bid> list = proxy.findAll();
 
 		try {
 			for(Bid bid : list) {
@@ -62,7 +62,7 @@ public class BidService {
 	 */
 	public Optional<Bid> saveBidDTO(final BidDTO bidDTO) {
 		try {
-			return Optional.of(repository.save(utilities.convertDtoToBid(bidDTO)));
+			return Optional.of(proxy.save(utilities.convertDtoToBid(bidDTO)));
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
@@ -77,8 +77,9 @@ public class BidService {
 	 * @return the bid DTO for update
 	 */
 	public BidDTO getBidDTOForUpdate(final Integer id) {
-		Bid bid = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid bid Id:" + id));
+		Bid bid = proxy.findById(id);
+		
+		if(bid == null)	throw(new IllegalArgumentException("Invalid bid Id:" + id));
 
 		return utilities.convertBidToDto(bid);
 	}
@@ -102,9 +103,6 @@ public class BidService {
 	 * @param id the id
 	 */
 	public void deleteBid(Integer id) {
-		Bid bid = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid bid Id:" + id));
-
-		repository.delete(bid);
+		proxy.deleteById(id);
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.repositories.TradeRepository;
+import com.nnk.springboot.proxies.TradeProxy;
 import com.nnk.springboot.service.DTO.TradeDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class TradeService {
 
-	/** The repository. */
+	/** The proxy. */
 	@Autowired
-	private TradeRepository repository;
+	private TradeProxy proxy;
 
 	/** The model mapper. */
 	private ModelMapper modelMapper;
@@ -40,7 +40,7 @@ public class TradeService {
 	 */
 	public List<TradeDTO> getTradeDTOList() {
 		List<TradeDTO> listDto = new ArrayList<>();
-		List<Trade> list = repository.findAll();
+		List<Trade> list = proxy.findAll();
 		modelMapper = new ModelMapper();
 
 		try {
@@ -62,7 +62,7 @@ public class TradeService {
 	 */
 	public Optional<Trade> saveTradeDTO(final TradeDTO tradeDTO) {
 		try {
-			return Optional.of(repository.save(modelMapper.map(tradeDTO, Trade.class)));
+			return Optional.of(proxy.save(modelMapper.map(tradeDTO, Trade.class)));
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
@@ -77,8 +77,9 @@ public class TradeService {
 	 * @return the trade DTO for update
 	 */
 	public TradeDTO getTradeDTOForUpdate(final Integer id) {
-		Trade trade = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+		Trade trade = proxy.findById(id);
+		
+		if(trade == null)	throw(new IllegalArgumentException("Invalid trade Id:" + id));
 
 		return modelMapper.map(trade, TradeDTO.class);
 	}
@@ -102,9 +103,6 @@ public class TradeService {
 	 * @param id the id
 	 */
 	public void deleteTrade(Integer id) {
-		Trade trade = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
-
-		repository.delete(trade);
+		proxy.deleteById(id);
 	}
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.repositories.CurvePointRepository;
+import com.nnk.springboot.proxies.CurvePointProxy;
 import com.nnk.springboot.service.DTO.CurvePointDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CurvePointService {
 
-	/** The repository. */
+	/** The proxy. */
 	@Autowired
-	private CurvePointRepository repository;
+	private CurvePointProxy proxy;
 
 	/** The model mapper. */
 	private ModelMapper modelMapper;
@@ -40,7 +40,7 @@ public class CurvePointService {
 	 */
 	public List<CurvePointDTO> getCurvePointDTOList() {
 		List<CurvePointDTO> listDto = new ArrayList<>();
-		List<CurvePoint> list = repository.findAll();
+		List<CurvePoint> list = proxy.findAll();
 		modelMapper = new ModelMapper();
 
 		try {
@@ -63,7 +63,7 @@ public class CurvePointService {
 	 */
 	public Optional<CurvePoint> saveCurvePointDTO(final CurvePointDTO curvePointDTO) {
 		try {
-			return Optional.of(repository.save(modelMapper.map(curvePointDTO, CurvePoint.class)));
+			return Optional.of(proxy.save(modelMapper.map(curvePointDTO, CurvePoint.class)));
 		} catch (Exception e) {
 			log.error(e.toString());
 		}
@@ -78,8 +78,9 @@ public class CurvePointService {
 	 * @return the curve point DTO for update
 	 */
 	public CurvePointDTO getCurvePointDTOForUpdate(final Integer id) {
-		CurvePoint curvePoint = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
+		CurvePoint curvePoint = proxy.findById(id);
+		
+		if(curvePoint == null)	throw(new IllegalArgumentException("Invalid curvePoint Id:" + id));
 
 		return modelMapper.map(curvePoint, CurvePointDTO.class);
 	}
@@ -103,9 +104,6 @@ public class CurvePointService {
 	 * @param id the id
 	 */
 	public void deleteCurvePoint(Integer id) {
-		CurvePoint curvePoint = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
-
-		repository.delete(curvePoint);
+		proxy.deleteById(id);
 	}
 }

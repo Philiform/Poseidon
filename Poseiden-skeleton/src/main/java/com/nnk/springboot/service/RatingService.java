@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.repositories.RatingRepository;
+import com.nnk.springboot.proxies.RatingProxy;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,9 +18,9 @@ import com.nnk.springboot.repositories.RatingRepository;
 @Service
 public class RatingService {
 
-	/** The repository. */
+	/** The proxy. */
 	@Autowired
-	private RatingRepository repository;
+	private RatingProxy proxy;
 
 	/**
 	 * Gets the rating list.
@@ -28,7 +28,7 @@ public class RatingService {
 	 * @return the rating list
 	 */
 	public List<Rating> getRatingList() {
-		return repository.findAll();
+		return proxy.findAll();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class RatingService {
 	 * @return the optional
 	 */
 	public Optional<Rating> saveRating(final Rating rating) {
-		return Optional.of(repository.save(rating));
+		return Optional.of(proxy.save(rating));
 	}
 
 	/**
@@ -48,8 +48,9 @@ public class RatingService {
 	 * @return the rating for update
 	 */
 	public Rating getRatingForUpdate(final int id) {
-		Rating rating = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+		Rating rating = proxy.findById(id);
+		
+		if(rating == null)	throw(new IllegalArgumentException("Invalid rating Id:" + id));
 
 		return rating;
 	}
@@ -73,9 +74,7 @@ public class RatingService {
 	 * @param id the id
 	 */
 	public void deleteRating(final int id) {
-		Rating rating = repository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
-		repository.delete(rating);
+		proxy.deleteById(id);
 	}
 
 }
